@@ -1,0 +1,83 @@
+# Test the root endpoint
+GET http://127.0.0.1:8000/
+Accept: application/json
+
+###
+
+# Test the suggestions endpoint with a query parameter q
+GET http://127.0.0.1:8000/suggestions?q=abb
+Accept: application/json
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "suggestions": [
+    {
+      "name": "Abbotsford",
+      "latitude": 49.05798,
+      "longitude": -122.25257,
+      "score": 1.0
+    }
+  ]
+}
+
+###
+
+# Test the suggestions endpoint with query parameters q, latitude, and longitude
+GET http://127.0.0.1:8000/suggestions?q=air&latitude=51.0&longitude=-114.0
+Accept: application/json
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "suggestions": [
+    {
+      "name": "Airdrie",
+      "latitude": 51.30011,
+      "longitude": -114.03528,
+      "score": 1.0
+    }
+  ]
+}
+
+###
+
+# Test the suggestions endpoint with a query parameter q that returns no results
+GET http://127.0.0.1:8000/suggestions?q=xyz
+Accept: application/json
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "suggestions": []
+}
+
+###
+
+# Test the suggestions endpoint with an invalid query parameter
+GET http://127.0.0.1:8000/suggestions?q=
+Accept: application/json
+
+HTTP/1.1 422 Unprocessable Entity
+Content-Type: application/json
+
+{
+  "detail": [
+    {
+      "loc": ["query", "q"],
+      "msg": "field required",
+      "type": "value_error.missing"
+    }
+  ]
+}
+
+###
+
+# Test the root endpoint not found
+GET http://127.0.0.1:8000/
+Accept: application/json
+
+HTTP/1.1 404 Not Found
